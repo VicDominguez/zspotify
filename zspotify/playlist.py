@@ -91,6 +91,7 @@ def download_from_user_playlist():
     """ Select which playlist(s) to download """
     playlists = get_all_playlists()
 
+    # From 1 to n to make it more user-friendly, but this offset needs to be removed later on
     count = 1
     for playlist in playlists:
         print(str(count) + ': ' + playlist[NAME].strip())
@@ -98,14 +99,27 @@ def download_from_user_playlist():
 
     print('\n> SELECT A PLAYLIST BY ID')
     print('> SELECT A RANGE BY ADDING A DASH BETWEEN BOTH ID\'s')
-    print('> For example, typing 10 to get one playlist or 10-20 to get\nevery playlist from 10-20 (inclusive)\n')
+    print('> SELECT MULTIPLE ENTRIES OR RANGES USING COMMAS')
+    print('> For example, type 10 to get one playlist, 10-20 to get every playlist from 10 to 20 (inclusive) \n'
+          'or 1,5,15-25 to get playlists 1,5 and every playlist from 15 to 25 (inclusive) \n')
 
-    playlist_choices = map(int, input('ID(s): ').split('-'))
+    # Obtain input removing whitespaces
+    raw_input = input('ID(s): ').replace(' ', '')
+    # Avoid duplicates using a set
+    playlist_choices = set()
 
-    start = next(playlist_choices) - 1
-    end = next(playlist_choices, start + 1)
+    # Split via comma
+    for part in raw_input.split(','):
+        # Check if part is a range or single number
+        # In any case, user input needs to be reduced by one
+        if '-' in part:
+            start, end = map(int, part.split('-'))
+            playlist_choices.update(range(start - 1, end))
+        else:
+            playlist_choices.add(int(part) - 1)
 
-    for playlist_number in range(start, end):
+    for playlist_number in playlist_choices:
+        # Obtain playlist from index and download it
         playlist = playlists[playlist_number]
         print(f'Downloading {playlist[NAME].strip()}')
         download_playlist(playlist)
