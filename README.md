@@ -1,14 +1,6 @@
-![Stars](https://img.shields.io/github/stars/Footsiefat/zspotify.svg)
-![Forks](https://img.shields.io/github/forks/Footsiefat/zspotify.svg)
-![Size](https://img.shields.io/github/repo-size/Footsiefat/zspotify)
-
 # ZSpotify
 
-### fixes
-Generate credentials.json
-https://github.com/kokarare1212/librespot-python/issues/277
-
-### A Spotify downloader needing only a python interpreter and ffmpeg.
+## A Spotify downloader needing only a python interpreter and ffmpeg.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/12180913/138040605-c9d46e45-3830-4a4b-a7ac-c56bb0d76335.png">
@@ -21,19 +13,20 @@ Requirements:
 
 Binaries
 
-- Python 3.9 or greater
-- ffmpeg*
-- Git**
+- Python 3.9-3.12*
+- ffmpeg**
+- Git***
 
 Python packages:
 
 - pip install -r requirements.txt
-
 ```
 
-\*ffmpeg can be installed via apt for Debian-based distros or by downloading the binaries from [ffmpeg.org](https://ffmpeg.org) and placing them in your %PATH% in Windows. Mac users can install it with [Homebrew](https://brew.sh) by running `brew install ffmpeg`.
+\* Python 3.13 removed [audioop](https://peps.python.org/pep-0594/), module used by PyDub dependency. Until fix on PyDub or replacement, Python 3.13 or upper is not supported.
 
-\*\*Git can be installed via apt for Debian-based distros or by downloading the binaries from [git-scm.com](https://git-scm.com/download/win) for Windows.
+\*\* ffmpeg can be installed via apt for Debian-based distros or by downloading the binaries from [ffmpeg.org](https://ffmpeg.org) and placing them in your %PATH% in Windows. Mac users can install it with [Homebrew](https://brew.sh) by running `brew install ffmpeg`.
+
+\*\*\* Git can be installed via apt for Debian-based distros or by downloading the binaries from [git-scm.com](https://git-scm.com/download/win) for Windows.
 
 ### Command line usage:
 
@@ -53,7 +46,7 @@ Options that can be configured in zs_config.json:
 
   SKIP_EXISTING_FILES       Set this to false if you want ZSpotify to overwrite files with the same name rather than skipping the song
   SKIP_FILE_WITHOUT_ID      Set this to false if you want ZSpotify to download file with a different name if id is not registered rather than add id and skip the song
-  
+
   PREFIX                    Set this to true if you want ZSpotify to add prefix on song file when downloading playlist or album
 
   MUSIC_FORMAT              Can be "mp3" or "ogg", mp3 is required for track metadata however ogg is slightly higher quality as it is not transcoded.
@@ -63,7 +56,7 @@ Options that can be configured in zs_config.json:
   ANTI_BAN_WAIT_TIME        Change this setting if the time waited between bulk downloads is too high or low
   GENERAL_ERROR_RETRIES     Integer with the number of retries to do when suffering general error on song download
   OVERRIDE_AUTO_WAIT        Change this to true if you want to completely disable the wait between songs for faster downloads with the risk of instability
-  
+
   SYNC_FILES_WITH_PLAYLIST  Enable this option if you want to remove songs that are not part of your playlist anymore
 ```
 
@@ -79,6 +72,7 @@ Create and run a container from the image:
 ```
 
 ### Google Colab
+
 There is a community maintained repo for Google Colab at [Ori5000/zspotifycolab](https://github.com/Ori5000/zspotifycolab) designed to make it easier to add songs to Google Drive or orther cloud services.
 
 ### Will my account get banned if I use this tool?
@@ -96,6 +90,10 @@ This option is much slower and is only recommended for premium users who wish to
 ### What do I do if I see "Your session has been terminated"?
 
 If you see this, don't worry! Just try logging back in. If you see the incorrect username or password error, reset your password and you should be able to log back in and continue using Spotify.
+
+### My credentials file is not working, how can I fix it?
+
+If your credentials.json file is not working, please have a look to the following [issue](https://github.com/kokarare1212/librespot-python/issues/277).
 
 ### Contributing
 
