@@ -93,6 +93,9 @@ def download_track(track_id: str, download_directory:str, prefix=False, prefix_v
 
         resolved_by_copy = False
 
+        # Ensure that download directory exist before download or copy
+        create_download_directory(download_directory)
+
         if ZSpotify.get_config(SKIP_EXISTING_FILES) and not check_name and not check_id:
             # Look if we have this song in another folder
             data_other_folders = get_other_directory_songs_info(ZSpotify.get_config(ROOT_PATH),download_directory)
@@ -123,9 +126,11 @@ def download_track(track_id: str, download_directory:str, prefix=False, prefix_v
     except Exception as e:
         print('###   SKIPPING SONG - FAILED TO QUERY METADATA   ###')
         print(e)
+        return None
     else:
         if not is_playable:
             print('\n###   SKIPPING:', song_name, '(SONG IS UNAVAILABLE)   ###')
+            return None
         else:
             if check_id and check_name and ZSpotify.get_config(SKIP_EXISTING_FILES):
                 print('\n###   SKIPPING:', song_name, '(SONG ALREADY EXISTS)   ###')
@@ -150,6 +155,9 @@ def download_track(track_id: str, download_directory:str, prefix=False, prefix_v
                     return scraped_song_id
                 else:
                     print('\n###   SKIPPING:', song_name, '(NUMBER OF RETRIES EXCEEDED)   ###')
+                    return None
+
+
 def perform_download(track_id: str, download_directory:str, filename: str, song_name: str, duration_ms: int,
                      disable_progressbar=False, intent = 1):
     if intent > ZSpotify.get_config(GENERAL_ERROR_RETRIES):
@@ -158,7 +166,6 @@ def perform_download(track_id: str, download_directory:str, filename: str, song_
     try:
         track_id_encoded = TrackId.from_base62(track_id)
         stream = ZSpotify.get_content_stream(track_id_encoded, ZSpotify.DOWNLOAD_QUALITY)
-        create_download_directory(download_directory)
         total_size = stream.input_stream.size
         time_start = time.time()
         download_size = 0
