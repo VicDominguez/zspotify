@@ -106,6 +106,9 @@ def download_track(track_id: str, download_directory:str, prefix=False, prefix_v
                     source_file = os.path.join(ZSpotify.get_config(ROOT_PATH),folder, song_id_info[scraped_song_id])
                     shutil.copy2(source_file, filename)
                     print('\n###   SKIPPING:', song_name, '(SONG COPIED FROM OTHER FOLDER)   ###')
+                    # add song id to download directory's .song_ids file
+                    if not check_id:
+                        add_to_directory_song_ids(download_directory, scraped_song_id, short_filename)
                     resolved_by_copy = True
                     break
 
