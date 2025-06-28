@@ -135,6 +135,8 @@ def download_track(track_id: str, download_directory:str, prefix=False, prefix_v
             if check_id and check_name and ZSpotify.get_config(SKIP_EXISTING_FILES):
                 print('\n###   SKIPPING:', song_name, '(SONG ALREADY EXISTS)   ###')
                 return scraped_song_id
+            elif resolved_by_copy:
+                return scraped_song_id
             else:
                 if track_id != scraped_song_id:
                     track_id = scraped_song_id
