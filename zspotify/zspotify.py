@@ -17,9 +17,8 @@ from librespot.audio.decoders import VorbisOnlyAudioQuality
 from librespot.core import Session
 
 from const import CREDENTIALS_JSON, TYPE, \
-    PREMIUM, USER_READ_EMAIL, AUTHORIZATION, OFFSET, LIMIT, CONFIG_FILE_PATH, FORCE_PREMIUM, \
+    PREMIUM, USER_READ_EMAIL, OFFSET, LIMIT, CONFIG_FILE_PATH, FORCE_PREMIUM, \
     PLAYLIST_READ_PRIVATE, USER_LIBRARY_READ, CONFIG_DEFAULT_SETTINGS
-from utils import MusicFormat
 
 
 class ZSpotify:

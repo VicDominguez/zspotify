@@ -1,7 +1,6 @@
 import os
 from typing import Optional, Tuple
 
-from librespot.audio.decoders import VorbisOnlyAudioQuality
 from librespot.metadata import EpisodeId
 from tqdm import tqdm
 
@@ -76,7 +75,8 @@ def download_episode(episode_id) -> None:
         filename = podcast_name + ' - ' + episode_name
 
         direct_download_url = ZSpotify.invoke_url(
-            'https://api-partner.spotify.com/pathfinder/v1/query?operationName=getEpisode&variables={"uri":"spotify:episode:' + episode_id + '"}&extensions={"persistedQuery":{"version":1,"sha256Hash":"224ba0fd89fcfdfb3a15fa2d82a6112d3f4e2ac88fba5c6713de04d1b72cf482"}}')["data"]["episode"]["audio"]["items"][-1]["url"]
+            'https://api-partner.spotify.com/pathfinder/v1/query?operationName=getEpisode&variables={"uri":"spotify:episode:' + episode_id + '"}&extensions={"persistedQuery":{"version":1,"sha256Hash":"224ba0fd89fcfdfb3a15fa2d82a6112d3f4e2ac88fba5c6713de04d1b72cf482"}}')[
+            "data"]["episode"]["audio"]["items"][-1]["url"]
 
         download_directory = os.path.join(
             os.path.dirname(__file__),
@@ -95,9 +95,9 @@ def download_episode(episode_id) -> None:
 
             filepath = os.path.join(download_directory, f"{filename}.ogg")
             if (
-                os.path.isfile(filepath)
-                and os.path.getsize(filepath) == total_size
-                and ZSpotify.get_config(SKIP_EXISTING_FILES)
+                    os.path.isfile(filepath)
+                    and os.path.getsize(filepath) == total_size
+                    and ZSpotify.get_config(SKIP_EXISTING_FILES)
             ):
                 print(
                     "\n###   SKIPPING:",
@@ -109,11 +109,11 @@ def download_episode(episode_id) -> None:
                 return
 
             with open(filepath, 'wb') as file, tqdm(
-                desc=filename,
-                total=total_size,
-                unit='B',
-                unit_scale=True,
-                unit_divisor=1024
+                    desc=filename,
+                    total=total_size,
+                    unit='B',
+                    unit_scale=True,
+                    unit_divisor=1024
             ) as bar:
                 for _ in range(int(total_size / ZSpotify.get_config(CHUNK_SIZE)) + 1):
                     bar.update(file.write(

@@ -2,11 +2,11 @@ import os
 import re
 import shutil
 import time
-from typing import Any, Tuple, List
+from typing import Any
 
+from ffmpy import FFmpeg
 from librespot.audio.decoders import AudioQuality
 from librespot.metadata import TrackId
-from ffmpy import FFmpeg
 from pydub import AudioSegment
 from tqdm import tqdm
 
@@ -36,7 +36,7 @@ def get_saved_tracks() -> list:
     return songs
 
 
-def get_song_info(song_id) -> Tuple[List[str], str, str, Any, Any, Any, Any, Any, Any]:
+def get_song_info(song_id) -> tuple[list[Any], Any, Any, Any, Any, Any, Any, Any, Any, Any]:
     """ Retrieves metadata for downloaded songs """
     info = ZSpotify.invoke_url(f'{TRACKS_URL}?ids={song_id}&market=from_token')
 
@@ -53,7 +53,9 @@ def get_song_info(song_id) -> Tuple[List[str], str, str, Any, Any, Any, Any, Any
     is_playable = info[TRACKS][0][IS_PLAYABLE]
     duration_ms = info[TRACKS][0][DURATION_MS]
 
-    return artists, album_name, name, image_url, release_year, disc_number, track_number, scraped_song_id, is_playable, duration_ms
+    return (artists, album_name, name, image_url, release_year, disc_number, track_number, scraped_song_id, is_playable,
+            duration_ms)
+
 
 def get_song_duration(song_id: str) -> float:
     """ Retrieves duration of song in second as is on spotify """
@@ -63,7 +65,7 @@ def get_song_duration(song_id: str) -> float:
     # get duration in miliseconds
     ms_duration = resp['duration_ms']
     # convert to seconds
-    duration = float(ms_duration)/1000
+    duration = float(ms_duration) / 1000
 
     # debug
     # print(duration)
@@ -71,10 +73,15 @@ def get_song_duration(song_id: str) -> float:
 
     return duration
 
+
 # noinspection PyBroadException
-def download_track(track_id: str, download_directory:str, prefix=False, prefix_value='', disable_progressbar= False) \
-        -> str|None:
+def download_track(track_id: str, download_directory: str = '', prefix=False, prefix_value='',
+                   disable_progressbar=False) \
+        -> str | None:
     """ Downloads raw song audio from Spotify """
+
+    if download_directory == '':
+        download_directory = os.path.join(os.path.dirname(__file__), ZSpotify.get_config(ROOT_PATH))
 
     try:
         (artists, album_name, name, image_url, release_year, disc_number,
@@ -98,12 +105,12 @@ def download_track(track_id: str, download_directory:str, prefix=False, prefix_v
 
         if ZSpotify.get_config(SKIP_EXISTING_FILES) and not check_name and not check_id:
             # Look if we have this song in another folder
-            data_other_folders = get_other_directory_songs_info(ZSpotify.get_config(ROOT_PATH),download_directory)
+            data_other_folders = get_other_directory_songs_info(ZSpotify.get_config(ROOT_PATH), download_directory)
 
             for folder, song_id_info in data_other_folders.items():
                 if scraped_song_id in song_id_info:
                     # If we have it, copy it and stop further process
-                    source_file = os.path.join(ZSpotify.get_config(ROOT_PATH),folder, song_id_info[scraped_song_id])
+                    source_file = os.path.join(ZSpotify.get_config(ROOT_PATH), folder, song_id_info[scraped_song_id])
                     shutil.copy2(source_file, filename)
                     print('\n###   SKIPPING:', song_name, '(SONG COPIED FROM OTHER FOLDER)   ###')
                     # add song id to download directory's .song_ids file
@@ -163,8 +170,8 @@ def download_track(track_id: str, download_directory:str, prefix=False, prefix_v
                     return None
 
 
-def perform_download(track_id: str, download_directory:str, filename: str, song_name: str, duration_ms: int,
-                     disable_progressbar=False, intent = 1):
+def perform_download(track_id: str, download_directory: str, filename: str, song_name: str, duration_ms: int,
+                     disable_progressbar=False, intent=1):
     if intent > ZSpotify.get_config(GENERAL_ERROR_RETRIES):
         return False
 
@@ -212,13 +219,15 @@ def perform_download(track_id: str, download_directory:str, filename: str, song_
         intent = intent + 1
         return perform_download(track_id, download_directory, filename, song_name, duration_ms, disable_progressbar,
                                 intent)
+
+
 def get_segment_duration(segment):
     """ Returns playback duration of given audio segment """
     sound = AudioSegment(
-        data = segment,
-        sample_width = 2,
-        frame_rate = 44100,
-        channels = 2
+        data=segment,
+        sample_width=2,
+        frame_rate=44100,
+        channels=2
     )
     duration = len(sound) / 5000
     return duration

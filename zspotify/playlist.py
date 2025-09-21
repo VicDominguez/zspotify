@@ -70,7 +70,7 @@ def download_playlist(playlist):
         save_playlist_info(playlist[ID], sanitized_playlist_name)
     else:
         if playlist_folder != sanitized_playlist_name:
-            update_playlist_info(playlist[ID], sanitized_playlist_name)
+            update_playlist_info(playlist[ID], playlist_folder, sanitized_playlist_name)
 
     for song in p_bar:
         downloaded_id = download_track(song[TRACK][ID], download_directory, prefix=ZSpotify.get_config(PREFIX),
