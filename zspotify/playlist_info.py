@@ -79,7 +79,7 @@ def update_playlist_info(playlist_id, old_playlist_name, new_playlist_name):
     with open(hidden_file_path, 'r', encoding='utf-8') as fin, \
             open(hidden_file_path_tmp, 'w', encoding='utf-8') as fout:
         for line in fin.readlines():
-            line_playlist_id = line.split(",")[1].strip()
+            line_playlist_id = line.split(",")[0].strip()
             if line_playlist_id == playlist_id:
                 fout.write(f"{playlist_id},{new_playlist_name}\n")
             else:
