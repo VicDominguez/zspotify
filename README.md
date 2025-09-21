@@ -1,34 +1,42 @@
-# ZSpotify
+<div align="center">
+    <img src="https://user-images.githubusercontent.com/12180913/138040605-c9d46e45-3830-4a4b-a7ac-c56bb0d76335.png">
+    <h3 align="center">ZSpotify</h3>
+    <p>A fork of ZSpotify, a Spotify downloader.</p>
+</div>
 
-## A Spotify downloader needing only a python interpreter and ffmpeg.
+## Table of Contents
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/12180913/138040605-c9d46e45-3830-4a4b-a7ac-c56bb0d76335.png">
-</p>
+- [🤔 What is this project?](#-what-is-this-project)
+- [🚀 Getting Started](#-getting-started)
+- [💙 Contributing](#-contributing)
 
-[Discord Server](https://discord.gg/skVNQKtyFq) - [Matrix Server](https://matrix.to/#/#zspotify:matrix.org) - [Gitea Mirror](https://git.robinsmediateam.dev/Footsiefat/zspotify) - [Main Site](https://footsiefat.github.io/)
+## 🤔 What is this project?
 
-```
-Requirements:
+This project is a fork of Zspotify, adding following features:
 
-Binaries
+- User can configure if it wants to use prefix on downloaded songs.
+- Retry mechanism when download failed.
+- Synchronization of local files with playlist status.
+- Support to copy a song from other folders if exist instead of download.
+- Multi playlist download.
+- Synchronization of previously downloaded playlists.
 
-- Python 3.9-3.12*
-- ffmpeg**
-- Git***
+Note: This project is provided under the principles of **fair use**. It must **not** be used to share, or
+distribute copyrighted content illegally.
+The author does not support piracy in any form, so users are solely responsible for how they use this project.
 
-Python packages:
+## 🚀 Getting Started
 
-- pip install -r requirements.txt
-```
+- Install ffmpeg. It can be installed via apt for Debian-based distros or by downloading the binaries
+  from [ffmpeg.org](https://ffmpeg.org) and placing them in your %PATH% in Windows. Mac users can install it
+  with [Homebrew](https://brew.sh) by running `brew install ffmpeg`.
+- Python 3.9-3.12. Python 3.13 removed [audioop](https://peps.python.org/pep-0594/), module used by PyDub dependency.
+  Until fix on PyDub
+  or replacement, Python 3.13 or upper is not supported.
+- Install dependencies via [requirements.txt](requirements.txt).
+- Execute :)
 
-\* Python 3.13 removed [audioop](https://peps.python.org/pep-0594/), module used by PyDub dependency. Until fix on PyDub or replacement, Python 3.13 or upper is not supported.
-
-\*\* ffmpeg can be installed via apt for Debian-based distros or by downloading the binaries from [ffmpeg.org](https://ffmpeg.org) and placing them in your %PATH% in Windows. Mac users can install it with [Homebrew](https://brew.sh) by running `brew install ffmpeg`.
-
-\*\*\* Git can be installed via apt for Debian-based distros or by downloading the binaries from [git-scm.com](https://git-scm.com/download/win) for Windows.
-
-### Command line usage:
+### Command line usage
 
 ```
 Basic command line usage:
@@ -39,6 +47,7 @@ Extra command line options:
   -ls, --liked-songs   Downloads all the liked songs from your account
   -s, --search         Loads search prompt to find then download a specific track, album or playlist
   -ns, --no-splash     Suppress the splash screen when loading.
+  -sy, --sync          Updates all playlists previously downloaded.
 
 Options that can be configured in zs_config.json:
   ROOT_PATH                 Change this path if you don't like the default directory where ZSpotify saves the music
@@ -71,38 +80,22 @@ Create and run a container from the image:
   docker run --rm -v "$PWD/ZSpotify Music:/ZSpotify Music" -v "$PWD/ZSpotify Podcasts:/ZSpotify Podcasts" -it zspotify
 ```
 
-### Google Colab
-
-There is a community maintained repo for Google Colab at [Ori5000/zspotifycolab](https://github.com/Ori5000/zspotifycolab) designed to make it easier to add songs to Google Drive or orther cloud services.
-
-### Will my account get banned if I use this tool?
-
-~~Currently no user has reported their account getting banned after using ZSpotify.~~
-
-**There have been 2-3 reports from users who received account bans from Spotify for using this tool**.
-
 We recommend using ZSpotify with a burner account.
-Alternatively, there is a configuration option labled ```DOWNLOAD_REAL_TIME```, this limits the download speed to the duration of the song being downloaded thus not appearing suspicious to Spotify.
-This option is much slower and is only recommended for premium users who wish to download songs in 320kbps without buying premium on a burner account.
+
+Alternatively, there is a configuration option labled ```DOWNLOAD_REAL_TIME```, this limits the download speed to the
+duration of the song being downloaded thus not appearing suspicious to Spotify.
+This option is much slower and is only recommended for premium users who wish to download songs in 320kbps without
+buying premium on a burner account.
 
 **Use ZSpotify at your own risk**, the developers of ZSpotify are not responsible if your account gets banned.
 
-### What do I do if I see "Your session has been terminated"?
-
-If you see this, don't worry! Just try logging back in. If you see the incorrect username or password error, reset your password and you should be able to log back in and continue using Spotify.
-
 ### My credentials file is not working, how can I fix it?
 
-If your credentials.json file is not working, please have a look to the following [issue](https://github.com/kokarare1212/librespot-python/issues/277).
+If your credentials.json file is not working, please have a look to the
+following [issue](https://github.com/kokarare1212/librespot-python/issues/277).
 
-### Contributing
+## 💙 Contributing
 
-Please refer to [CONTRIBUTING](CONTRIBUTING.md)
-
-### Changelog
-
-Please refer to [CHANGELOG](CHANGELOG.md)
-
-### Common Errors
-
-Please refer to [COMMON_ERRORS](COMMON_ERRORS.md)
+Any contributions you make are **greatly appreciated**, so if you have any idea of how to make this project better,
+please [create a pull request](https://github.com/VicDominguez/zspotify/pulls).
+Also, if you find any bug, please [create an issue](https://github.com/VicDominguez/zspotify/issues/new).
