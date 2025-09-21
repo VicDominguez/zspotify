@@ -4,7 +4,8 @@ from tabulate import tabulate
 from album import download_album, download_artist_albums
 from const import TRACK, NAME, ID, ARTIST, ARTISTS, ITEMS, TRACKS, EXPLICIT, ALBUM, ALBUMS, \
     OWNER, PLAYLIST, PLAYLISTS, DISPLAY_NAME
-from playlist import get_playlist_songs, get_playlist_info, download_from_user_playlist, download_playlist
+from playlist import get_playlist_songs, get_playlist_info, download_from_user_playlist, download_playlist, \
+    sync_playlists
 from podcast import download_episode, get_show_episodes
 from track import download_track, get_saved_tracks
 from utils import fix_filename, splash, split_input, regex_input_for_urls
@@ -92,7 +93,8 @@ def client(args) -> None:
                 download_episode(episode)
         else:
             search(search_text)
-
+    if args.sync_playlists:
+        sync_playlists()
 
 def search(search_term):
     """ Searches Spotify's API for relevant data """

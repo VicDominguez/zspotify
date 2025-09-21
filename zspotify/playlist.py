@@ -3,6 +3,8 @@ import os
 from tqdm import tqdm
 
 from const import ITEMS, ID, TRACK, NAME, PREFIX, ROOT_PATH, SYNC_FILES_WITH_PLAYLIST
+from playlist_info import is_playlist_on_playlist_file, update_playlist_info, save_playlist_info, \
+    get_playlist_ids, purge_playlists_id
 from track import download_track
 from utils import fix_filename, get_directory_song_filenames, purge_songs_id
 from zspotify import ZSpotify
@@ -56,14 +58,23 @@ def download_playlist(playlist):
     p_bar = tqdm(playlist_songs, unit='song', total=len(playlist_songs), unit_scale=True)
     enum = 1
 
-    download_directory = os.path.join(os.path.dirname(__file__), ZSpotify.get_config(ROOT_PATH),
-                                      fix_filename(playlist[NAME].strip()) + '/')
+    root_directory = os.path.join(os.path.dirname(__file__), ZSpotify.get_config(ROOT_PATH))
+    sanitized_playlist_name = fix_filename(playlist[NAME].strip())
+    download_directory = os.path.join(root_directory, (sanitized_playlist_name + '/'))
 
     actual_songs_ids = []
 
+    playlist_folder = is_playlist_on_playlist_file(playlist[ID])
+
+    if playlist_folder is None:
+        save_playlist_info(playlist[ID], sanitized_playlist_name)
+    else:
+        if playlist_folder != sanitized_playlist_name:
+            update_playlist_info(playlist[ID], sanitized_playlist_name)
+
     for song in p_bar:
         downloaded_id = download_track(song[TRACK][ID], download_directory, prefix=ZSpotify.get_config(PREFIX),
-                       prefix_value=str(enum) ,disable_progressbar=True)
+                                       prefix_value=str(enum), disable_progressbar=True)
         if downloaded_id is not None:
             actual_songs_ids.append(downloaded_id)
         p_bar.set_description(song[TRACK][NAME])
@@ -125,3 +136,18 @@ def download_from_user_playlist():
         download_playlist(playlist)
 
     print('\n**All playlists have been downloaded**\n')
+
+
+def sync_playlists():
+    print('Synchronizing playlists...')
+
+    print("Purging file")
+    purge_playlists_id()
+
+    for playlist_id in get_playlist_ids():
+        name, username = get_playlist_info(playlist_id)
+        playlist_info = {ID: playlist_id, NAME: name}
+        print(f'Updating {name}..')
+        download_playlist(playlist_info)
+
+    print('\n**All playlists have been synchronized**\n')

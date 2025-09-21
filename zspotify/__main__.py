@@ -28,6 +28,10 @@ if __name__ == '__main__':
                        dest='search_spotify',
                        action='store_true',
                        help='Loads search prompt to find then download a specific track, album or playlist')
+    group.add_argument('-sy', '--sync',
+                       dest='sync_playlists',
+                       action='store_true',
+                       help='Updates all playlists previously downloaded')
 
     parser.set_defaults(func=client)
 
